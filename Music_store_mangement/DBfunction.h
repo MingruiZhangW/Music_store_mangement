@@ -2,6 +2,8 @@
 #define DBFUNCTION_H
 
 #include <set>
+#include <map>
+#include <utility>      // std::pair, std::make_pair
 #include "DBconnection.h"
 
 void AddNewItemInDatabase();
@@ -20,5 +22,6 @@ void ItemInStock();
 void FindMusic();
 void EditItem();
 void RemoveItem();
+void CreateOrder();
 
 #endif // !DBFUNCTION_H

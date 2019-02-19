@@ -17,7 +17,8 @@ int main()
 	//ShowAllItems(false);
 	//FindMusic();
 	//EditItem();
-	RemoveItem();
+	//RemoveItem();
+	CreateOrder();
 	std::cin.get();
 	return 0;
 }

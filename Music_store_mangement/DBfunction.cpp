@@ -23,27 +23,32 @@ void AddNewItemInDatabase() {
 
 	//`m_category`, `m_type`, `m_name`, `m_artist`, `m_price`, `m_quantity`
 	std::cout << "Please Entre a Category" << std::endl;
-
+	std::cout << std::endl;
 	std::string Category;
 	getinput_str(Category);
 
 	std::cout << "Please Entre a Type" << std::endl;
+	std::cout << std::endl;
 	std::string Type;
 	getinput_str(Type);
 
 	std::cout << "Please Entre a Name" << std::endl;
+	std::cout << std::endl;
 	std::string Name;
 	getinput_str(Name);
 
 	std::cout << "Please Entre a Artist" << std::endl;
+	std::cout << std::endl;
 	std::string Artist;
 	getinput_str(Artist);
 
 	std::cout << "Please Entre a Price" << std::endl;
+	std::cout << std::endl;
 	int Price;
 	getinput_num(Price);
 
 	std::cout << "Please Entre the Quantity" << std::endl;
+	std::cout << std::endl;
 	int Quantity;
 	getinput_num(Quantity);
 
@@ -53,7 +58,7 @@ void AddNewItemInDatabase() {
 	const char* q = query.c_str();
 	int qstate = mysql_query(g_conn, q);
 
-	if (!qstate){std::cout << "Insert Success-------" << std::endl;}
+	if (!qstate){std::cout << "Insert Success-------" << std::endl; std::cout << std::endl;}
 	else{std::cout << "Query failed: " << mysql_error(g_conn) << std::endl;}
 
 
@@ -72,6 +77,7 @@ void getinput_str(std::string &stored_place) {
 			std::cin.clear(); // put us back in 'normal' operation mode
 			std::cin.ignore(32767, '\n'); // and remove the bad input
 			std::cout << "Input Invalid, Try again!" << std::endl;
+			std::cout << std::endl;
 
 		}
 		else // else our extraction succeeded
@@ -97,6 +103,7 @@ void getinput_num(int &stored_place) {
 			std::cin.clear(); // put us back in 'normal' operation mode
 			std::cin.ignore(32767, '\n'); // and remove the bad input
 			std::cout << "Input Invalid, Try again!" << std::endl;
+			std::cout << std::endl;
 
 		}
 		else // else our extraction succeeded
@@ -105,6 +112,7 @@ void getinput_num(int &stored_place) {
 			if (stored_place < 0) {
 			
 				std::cout << "Input Invalid, Try again!" << std::endl;
+				std::cout << std::endl;
 			
 			}
 			else {
@@ -215,6 +223,7 @@ void FindMusic() {
 	std::cout << "2. ->->Type" << std::endl;
 	std::cout << "3. ->->Artist" << std::endl;
 	std::cout << "4. ->->Category" << std::endl;
+	std::cout << std::endl;
 
 	while (true)
 	{
@@ -239,10 +248,12 @@ void FindMusic() {
 		}
 
 		std::cout << "Opps, Invalid Input, Try again" << std::endl;
+		std::cout << std::endl;
 
 	}
 
 	std::cout << "Please Enter the Search Element" << std::endl;
+	std::cout << std::endl;
 
 	getinput_str(search_element);
 
@@ -310,6 +321,7 @@ void EditItem() {
 	else { std::cout << "Query failed: " << mysql_error(g_conn) << std::endl; }
 	
 	std::cout << "Choose a Musicid to Edit-------------" << std::endl;
+	std::cout << std::endl;
 
 	int musid_to_edit;
 	getinput_num(musid_to_edit);
@@ -328,6 +340,7 @@ void EditItem() {
 	std::cout << "4. Artist" << std::endl;
 	std::cout << "5. Price" << std::endl;
 	std::cout << "6. Quantity" << std::endl;
+	std::cout << std::endl;
 
 	std::string musicPro_to_edit_str;
 	int musicPro_to_edit;
@@ -358,6 +371,7 @@ void EditItem() {
 	std::string update_item_str;
 
 	std::cout << "Please Enter the Update Element" << std::endl;
+	std::cout << std::endl;
 	if (musid_to_edit == 5 || musid_to_edit == 6) { 
 
 		getinput_num(update_item_int); 
@@ -382,6 +396,7 @@ void EditItem() {
 	if (!qstate_2) {
 	
 		std::cout << "Update Successed-------" << std::endl;
+		std::cout << std::endl;
 
 	}
 	else { std::cout << "Query failed: " << mysql_error(g_conn) << std::endl; }
@@ -419,6 +434,7 @@ void RemoveItem() {
 	else { std::cout << "Query failed: " << mysql_error(g_conn) << std::endl; }
 
 	std::cout << "Choose a Musicid to Delete-------------" << std::endl;
+	std::cout << std::endl;
 
 	int musid_to_edit;
 	getinput_num(musid_to_edit);
@@ -438,7 +454,93 @@ void RemoveItem() {
 	if (!qstate_2) {
 
 		std::cout << "Delete Successed -------" << std::endl;
+		std::cout << std::endl;
 
 	}
 	else { std::cout << "Query failed: " << mysql_error(g_conn) << std::endl; }
+}
+
+void CreateOrder() {
+
+	std::map<int,std::pair<int,int>> music_id_quan_price;
+	int price {0};
+	MYSQL_ROW row;
+	MYSQL_RES *res;
+
+	std::string query{ "SELECT m_id,m_name,m_quantity,m_price FROM musicinfo_tb" };
+	const char* q = query.c_str();
+	int qstate = mysql_query(g_conn, q);
+
+	if (!qstate) {
+
+		res = mysql_store_result(g_conn);
+
+		std::cout << std::endl;
+		while (row = mysql_fetch_row(res)) {
+
+			int music_id_store, music_id_quan,music_id_price;
+			sscanf_s(row[0], "%d", &music_id_store);
+			sscanf_s(row[2], "%d", &music_id_quan);
+			sscanf_s(row[3], "%d", &music_id_price);
+			std::pair<int,int>temp_store{ std::make_pair(music_id_quan,music_id_price) };
+			music_id_quan_price.emplace(music_id_store, temp_store);
+			std::cout << "Musicid: " << row[0] << " -- Music_name: " << row[1] << "-- Quantity: " << row[2] << "-- Price: " << row[3] << std::endl;
+			std::cout << std::endl;
+
+		}
+		std::cout << std::endl;
+
+	}
+	else { std::cout << "Query failed: " << mysql_error(g_conn) << std::endl; }
+
+	while (true) {
+
+		std::cout << "Please Enter the Musicid to Create Order, Zero to Exit" << std::endl;
+		std::cout << std::endl;
+
+		int music_id_buying;
+		getinput_num(music_id_buying);
+
+		if (music_id_buying == 0) { break; }
+		if (music_id_quan_price.find(music_id_buying) == music_id_quan_price.end()) { std::cout << "Invalid Input, Try Again ----------" << std::endl; continue; }
+
+		std::cout << "Please Enter the Quantity to Create Order, Zero to Exit" << std::endl;
+		std::cout << std::endl;
+
+		int music_id_quan_buying;
+		getinput_num(music_id_quan_buying);
+
+		if (music_id_quan_buying == 0) { break; }
+		if (std::get<0>(music_id_quan_price[music_id_buying]) < music_id_quan_buying) { std::cout << "Invalid Input, Try Again ----------" << std::endl; continue; }
+
+
+		std::get<0>(music_id_quan_price[music_id_buying]) = std::get<0>(music_id_quan_price[music_id_buying]) - music_id_quan_buying;
+		price += std::get<1>(music_id_quan_price[music_id_buying]) * music_id_quan_buying;
+
+		//Update Database
+		MYSQL_ROW row_up_info;
+		MYSQL_RES *res_up_info;
+
+		std::string query_up_info{ "UPDATE musicinfo_tb SET m_quantity = " };
+
+		query_up_info += std::to_string(std::get<0>(music_id_quan_price[music_id_buying]));
+		query_up_info += " WHERE m_id = ";
+		query_up_info += std::to_string(music_id_buying);
+
+		const char* q_up_info = query_up_info.c_str();
+		int qstate_up_info = mysql_query(g_conn, q_up_info);
+
+		std::cout << "Another item ? ---------- 1 -> Yes, 2 -> NO" << std::endl;
+		std::cout << std::endl;
+
+		int again_int;
+		getinput_num(again_int);
+
+		if (again_int == 1) { continue; }
+		break;
+
+	}
+
+	std::cout << "Total Price is " << price << std::endl;
+
 }
