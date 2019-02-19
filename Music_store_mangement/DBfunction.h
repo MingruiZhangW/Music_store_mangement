@@ -1,6 +1,7 @@
 #ifndef DBFUNCTION_H
 #define DBFUNCTION_H
 
+#include <set>
 #include "DBconnection.h"
 
 void AddNewItemInDatabase();
@@ -17,5 +18,6 @@ std::string Insert_addNewItemInDatabase_query(
 void ShowAllItems(bool in_stock);
 void ItemInStock();
 void FindMusic();
+void EditItem();
 
 #endif // !DBFUNCTION_H

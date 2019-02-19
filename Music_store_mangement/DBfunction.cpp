@@ -157,6 +157,8 @@ std::string Insert_addNewItemInDatabase_query(
 
 void ShowAllItems(bool in_stock) {
 
+	// input false will display all items even with 0 quantity
+
 	MYSQL_ROW row;
 	MYSQL_RES *res;
 
@@ -275,5 +277,114 @@ void FindMusic() {
 		std::cout << std::endl;
 	}
 	else { std::cout << "Query failed: Element Searched May not Exist" << std::endl; }
+
+}
+
+void EditItem() {
+
+	std::set<int> music_id_instore;
+	MYSQL_ROW row;
+	MYSQL_RES *res;
+
+	std::string query{ "SELECT m_id,m_name FROM musicinfo_tb" };
+	const char* q = query.c_str();
+	int qstate = mysql_query(g_conn, q);
+
+	if (!qstate) {
+
+		res = mysql_store_result(g_conn);
+
+		std::cout << std::endl;
+		while (row = mysql_fetch_row(res)) {
+		
+			int music_in_store;
+			sscanf_s(row[0], "%d", &music_in_store);
+			music_id_instore.emplace(music_in_store);
+			std::cout << "Musicid: " << row[0] << " ------ Music_name: " << row[1] << std::endl;
+			std::cout << std::endl;
+		
+		}
+		std::cout << std::endl;
+
+	}
+	else { std::cout << "Query failed: " << mysql_error(g_conn) << std::endl; }
+	
+	std::cout << "Choose a Musicid to Edit-------------" << std::endl;
+
+	int musid_to_edit;
+	getinput_num(musid_to_edit);
+
+	if (music_id_instore.find(musid_to_edit) == music_id_instore.end()) {
+	
+		std::cout << "Invalid Input, Exiting --------" << std::endl;
+		return;
+	
+	}
+
+	std::cout << "Which proprity do you want to edit for Musicid " << musid_to_edit << std::endl;
+	std::cout << "1. Category" << std::endl;
+	std::cout << "2. Type" << std::endl;
+	std::cout << "3. Name" << std::endl;
+	std::cout << "4. Artist" << std::endl;
+	std::cout << "5. Price" << std::endl;
+	std::cout << "6. Quantity" << std::endl;
+
+	std::string musicPro_to_edit_str;
+	int musicPro_to_edit;
+	getinput_num(musicPro_to_edit);
+
+	if (musicPro_to_edit != 1 && musicPro_to_edit != 2 && musicPro_to_edit != 3 && musicPro_to_edit != 4 && musicPro_to_edit != 5 && musicPro_to_edit != 6) {
+	
+		std::cout << "Invalid Input, Exiting --------" << std::endl;
+		return;
+
+	}
+
+	switch (musicPro_to_edit)
+	{
+	case 1: musicPro_to_edit_str = "m_category"; break;
+	case 2: musicPro_to_edit_str = "m_type"; break;
+	case 3: musicPro_to_edit_str = "m_name"; break;
+	case 4: musicPro_to_edit_str = "m_artist"; break;
+	case 5: musicPro_to_edit_str = "m_price"; break;
+	case 6: musicPro_to_edit_str = "m_quantity"; break;
+		break;
+	}
+
+	std::string update_query{ "UPDATE musicinfo_tb SET " };
+	update_query += musicPro_to_edit_str;
+	update_query += " = ";
+	int update_item_int;
+	std::string update_item_str;
+
+	std::cout << "Please Enter the Update Element" << std::endl;
+	if (musid_to_edit == 5 || musid_to_edit == 6) { 
+
+		getinput_num(update_item_int); 
+		update_query += update_item_int;
+
+	}
+	else {
+
+		getinput_str(update_item_str);
+		update_query += "\"";
+		update_query += update_item_str;
+		update_query += "\"";
+
+	}
+
+	update_query += " WHERE m_id = ";
+	update_query += std::to_string(musid_to_edit);
+	//std::cout << update_query << std::endl;
+	const char* q_2 = update_query.c_str();
+	int qstate_2 = mysql_query(g_conn, q_2);
+
+	if (!qstate_2) {
+	
+		std::cout << "Update Successed-------" << std::endl;
+
+	}
+	else { std::cout << "Query failed: " << mysql_error(g_conn) << std::endl; }
+	
 
 }

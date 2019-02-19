@@ -13,9 +13,10 @@ int main()
 {
 	DBconnection_Init();
 
-	AddNewItemInDatabase();
+	//AddNewItemInDatabase();
 	//ShowAllItems(false);
 	//FindMusic();
+	EditItem();
 	std::cin.get();
 	return 0;
 }
