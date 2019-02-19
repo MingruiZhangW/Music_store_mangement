@@ -19,5 +19,6 @@ void ShowAllItems(bool in_stock);
 void ItemInStock();
 void FindMusic();
 void EditItem();
+void RemoveItem();
 
 #endif // !DBFUNCTION_H

@@ -16,7 +16,8 @@ int main()
 	//AddNewItemInDatabase();
 	//ShowAllItems(false);
 	//FindMusic();
-	EditItem();
+	//EditItem();
+	RemoveItem();
 	std::cin.get();
 	return 0;
 }

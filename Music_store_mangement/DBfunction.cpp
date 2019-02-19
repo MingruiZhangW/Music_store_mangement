@@ -53,7 +53,7 @@ void AddNewItemInDatabase() {
 	const char* q = query.c_str();
 	int qstate = mysql_query(g_conn, q);
 
-	if (!qstate){std::cout << "Insert Success" << std::endl;}
+	if (!qstate){std::cout << "Insert Success-------" << std::endl;}
 	else{std::cout << "Query failed: " << mysql_error(g_conn) << std::endl;}
 
 
@@ -387,4 +387,58 @@ void EditItem() {
 	else { std::cout << "Query failed: " << mysql_error(g_conn) << std::endl; }
 	
 
+}
+
+void RemoveItem() {
+
+	std::set<int> music_id_instore;
+	MYSQL_ROW row;
+	MYSQL_RES *res;
+
+	std::string query{ "SELECT m_id,m_name FROM musicinfo_tb" };
+	const char* q = query.c_str();
+	int qstate = mysql_query(g_conn, q);
+
+	if (!qstate) {
+
+		res = mysql_store_result(g_conn);
+
+		std::cout << std::endl;
+		while (row = mysql_fetch_row(res)) {
+
+			int music_in_store;
+			sscanf_s(row[0], "%d", &music_in_store);
+			music_id_instore.emplace(music_in_store);
+			std::cout << "Musicid: " << row[0] << " ------ Music_name: " << row[1] << std::endl;
+			std::cout << std::endl;
+
+		}
+		std::cout << std::endl;
+
+	}
+	else { std::cout << "Query failed: " << mysql_error(g_conn) << std::endl; }
+
+	std::cout << "Choose a Musicid to Delete-------------" << std::endl;
+
+	int musid_to_edit;
+	getinput_num(musid_to_edit);
+
+	if (music_id_instore.find(musid_to_edit) == music_id_instore.end()) {
+
+		std::cout << "Invalid Input, Exiting --------" << std::endl;
+		return;
+
+	}
+
+	std::string query_2{ "DELETE FROM musicinfo_tb WHERE m_id = " };
+	query_2 += std::to_string(musid_to_edit);
+	const char* q_2 = query_2.c_str();
+	int qstate_2 = mysql_query(g_conn, q_2);
+
+	if (!qstate_2) {
+
+		std::cout << "Delete Successed -------" << std::endl;
+
+	}
+	else { std::cout << "Query failed: " << mysql_error(g_conn) << std::endl; }
 }
