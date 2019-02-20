@@ -550,7 +550,7 @@ void CreateOrder() {
 			query_up_sold_update = Insert_addNewItemInDatabase_query(row_up_info[1], row_up_info[2], row_up_info[3], row_up_info[4], input_price, music_id_quan_buying, true);
 				
 		}
-		std::cout << query_up_sold_update << std::endl;
+
 		q_up_info = query_up_sold_update.c_str();
 		qstate_up_info = mysql_query(g_conn, q_up_info);
 		if (qstate_up_info) { std::cout << "Wrong Updates Check the system!!!!!!!" << std::endl; return; }
