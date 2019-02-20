@@ -15,7 +15,8 @@ std::string Insert_addNewItemInDatabase_query(
 	std::string Name,
 	std::string Artist,
 	int Price,
-	int Quantity
+	int Quantity,
+	bool soldOrinfo
 );
 void ShowAllItems(bool in_stock);
 void ItemInStock();

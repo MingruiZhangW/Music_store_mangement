@@ -52,7 +52,7 @@ void AddNewItemInDatabase() {
 	int Quantity;
 	getinput_num(Quantity);
 
-	std::string query {Insert_addNewItemInDatabase_query(Category,Type,Name,Artist,Price,Quantity)};
+	std::string query {Insert_addNewItemInDatabase_query(Category,Type,Name,Artist,Price,Quantity,false)};
 	//c_str() converts the string to constant character the mysql_query function 
 	//can only deals with the constant character.
 	const char* q = query.c_str();
@@ -133,26 +133,29 @@ std::string Insert_addNewItemInDatabase_query(
 			std::string Name,
 			std::string Artist,
 			int Price,
-			int Quantity
+			int Quantity,
+			bool soldOrinfo
 ) {
 
 	//INSERT INTO `musicinfo_tb` (`m_category`, `m_type`, `m_name`, `m_artist`, `m_price`, `m_quantity`) VALUES
 	//('Popular ', 'Jazz', 'WU-TANG CLAN ¨C ¡®DON¡¯T STOP¡¯', 'WU-TANG CLAN', 10, 1)
-	std::string query_re{"INSERT INTO musicinfo_tb (m_category, m_type, m_name, m_artist, m_price, m_quantity) VALUES ('"};
+	std::string query_re;
+	if (soldOrinfo) { query_re = "INSERT INTO solditem_tb (m_category, m_type, m_name, m_artist, m_price, m_quantity) VALUES (\""; }
+	else { query_re = "INSERT INTO musicinfo_tb (m_category, m_type, m_name, m_artist, m_price, m_quantity) VALUES (\""; }
 	query_re += Category;
-	query_re += "'";
+	query_re += "\"";
 	query_re += ",";
-	query_re += "'";
+	query_re += "\"";
 	query_re += Type;
-	query_re += "'";
+	query_re += "\"";
 	query_re += ",";
-	query_re += "'";
+	query_re += "\"";
 	query_re += Name;
-	query_re += "'";
+	query_re += "\"";
 	query_re += ",";
-	query_re += "'";
+	query_re += "\"";
 	query_re += Artist;
-	query_re += "'";
+	query_re += "\"";
 	query_re += ",";
 	query_re += std::to_string(Price);
 	query_re += ",";
@@ -467,7 +470,7 @@ void CreateOrder() {
 	MYSQL_ROW row;
 	MYSQL_RES *res;
 
-	std::string query{ "SELECT m_id,m_name,m_quantity,m_price FROM musicinfo_tb" };
+	std::string query{ "SELECT m_id,m_name,m_quantity,m_price FROM musicinfo_tb WHERE m_quantity > 0" };
 	const char* q = query.c_str();
 	int qstate = mysql_query(g_conn, q);
 
@@ -517,7 +520,7 @@ void CreateOrder() {
 		std::get<0>(music_id_quan_price[music_id_buying]) = std::get<0>(music_id_quan_price[music_id_buying]) - music_id_quan_buying;
 		price += std::get<1>(music_id_quan_price[music_id_buying]) * music_id_quan_buying;
 
-		//Update Database
+		//Update Info Database
 		MYSQL_ROW row_up_info;
 		MYSQL_RES *res_up_info;
 
@@ -529,6 +532,29 @@ void CreateOrder() {
 
 		const char* q_up_info = query_up_info.c_str();
 		int qstate_up_info = mysql_query(g_conn, q_up_info);
+
+		//Update Solditem database
+
+		std::string query_up_sold{ "SELECT * FROM musicinfo_tb WHERE m_id = " };
+		query_up_sold += std::to_string(music_id_buying);
+		q_up_info = query_up_sold.c_str();
+		qstate_up_info = mysql_query(g_conn, q_up_info);
+		if (qstate_up_info) { std::cout << "Wrong Updates Check the system!!!!!!!1" << std::endl; return; }
+
+		res_up_info = mysql_store_result(g_conn);
+		int input_price { 0 };
+		std::string query_up_sold_update;
+		while (row_up_info = mysql_fetch_row(res_up_info)) {
+				
+			sscanf_s(row_up_info[5], "%d", &input_price);
+			query_up_sold_update = Insert_addNewItemInDatabase_query(row_up_info[1], row_up_info[2], row_up_info[3], row_up_info[4], input_price, music_id_quan_buying, true);
+				
+		}
+		std::cout << query_up_sold_update << std::endl;
+		q_up_info = query_up_sold_update.c_str();
+		qstate_up_info = mysql_query(g_conn, q_up_info);
+		if (qstate_up_info) { std::cout << "Wrong Updates Check the system!!!!!!!" << std::endl; return; }
+
 
 		std::cout << "Another item ? ---------- 1 -> Yes, 2 -> NO" << std::endl;
 		std::cout << std::endl;
