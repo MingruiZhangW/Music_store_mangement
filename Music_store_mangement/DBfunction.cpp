@@ -182,6 +182,14 @@ void ShowAllItems(bool in_stock) {
 	
 		res = mysql_store_result(g_conn);
 
+		if (mysql_num_rows(res) == 0) {
+
+			std::cout << "No Item in the Store -------" << std::endl;
+			std::cout << std::endl;
+			return;
+
+		}
+
 		std::cout << std::endl;
 		while (row = mysql_fetch_row(res))
 		{
@@ -273,11 +281,19 @@ void FindMusic() {
 	if (!qstate) {
 
 		res = mysql_store_result(g_conn);
+
+		if (mysql_num_rows(res) == 0) {
+
+			std::cout << "No Item in Found in the Store -------" << std::endl;
+			std::cout << std::endl;
+			return;
+
+		}
+
 		std::cout << std::endl;
 
 		while (row = mysql_fetch_row(res)) {
 			
-			if (row == nullptr) { std::cout << "Element Searched May not Exist"; }
 			printf("Music_id: %s\n", row[0]);
 			printf("Category: %s\n", row[1]);
 			printf("Type: %s\n", row[2]);
@@ -308,6 +324,14 @@ void EditItem() {
 	if (!qstate) {
 
 		res = mysql_store_result(g_conn);
+
+		if (mysql_num_rows(res) == 0) {
+
+			std::cout << "No Item in the Store -------" << std::endl;
+			std::cout << std::endl;
+			return;
+
+		}
 
 		std::cout << std::endl;
 		while (row = mysql_fetch_row(res)) {
@@ -422,6 +446,14 @@ void RemoveItem() {
 
 		res = mysql_store_result(g_conn);
 
+		if (mysql_num_rows(res) == 0) {
+
+			std::cout << "No Item in the Store -------" << std::endl;
+			std::cout << std::endl;
+			return;
+
+		}
+
 		std::cout << std::endl;
 		while (row = mysql_fetch_row(res)) {
 
@@ -478,6 +510,14 @@ void CreateOrder() {
 	if (!qstate) {
 
 		res = mysql_store_result(g_conn);
+
+		if (mysql_num_rows(res) == 0) {
+
+			std::cout << "No Item in the Store -------" << std::endl;
+			std::cout << std::endl;
+			return;
+
+		}
 
 		std::cout << std::endl;
 		while (row = mysql_fetch_row(res)) {
@@ -584,6 +624,14 @@ void SoldItems() {
 	if (!qstate) {
 
 		res = mysql_store_result(g_conn);
+
+		if (mysql_num_rows(res) == 0) {
+
+			std::cout << "No Item in the Store -------" << std::endl;
+			std::cout << std::endl;
+			return;
+
+		}
 
 		std::cout << std::endl;
 		while (row = mysql_fetch_row(res))
