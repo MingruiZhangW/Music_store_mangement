@@ -32,6 +32,8 @@ int main()
 		std::cout << std::endl;
 		std::cout << "7. Create An Order" << std::endl;
 		std::cout << std::endl;
+		std::cout << "8. Show All Sold Items" << std::endl;
+		std::cout << std::endl;
 		std::cout << "0. Exit Program" << std::endl;
 		std::cout << std::endl;
 
@@ -51,6 +53,7 @@ int main()
 		case 5: EditItem();  break;
 		case 6: RemoveItem();  break;
 		case 7: CreateOrder();  break;
+		case 8: SoldItems(); break;
 		}
 
 		if (exit == 1) { break;  }

@@ -285,6 +285,7 @@ void FindMusic() {
 			printf("Artist: %s\n", row[4]);
 			printf("Price: %s\n", row[5]);
 			printf("Quantity: %s\n", row[6]);
+			std::cout << std::endl;
 		
 		}
 
@@ -568,5 +569,39 @@ void CreateOrder() {
 	}
 
 	std::cout << "Total Price is " << price << std::endl;
+
+}
+
+void SoldItems() {
+
+	MYSQL_ROW row;
+	MYSQL_RES *res;
+
+	std::string query{ "SELECT * FROM solditem_tb" };
+	const char* q = query.c_str();
+	int qstate = mysql_query(g_conn, q);
+
+	if (!qstate) {
+
+		res = mysql_store_result(g_conn);
+
+		std::cout << std::endl;
+		while (row = mysql_fetch_row(res))
+		{
+
+			std::cout << std::endl;
+			printf("Music_id: %s\n", row[0]);
+			printf("Category: %s\n", row[1]);
+			printf("Type: %s\n", row[2]);
+			printf("Music_Name: %s\n", row[3]);
+			printf("Artist: %s\n", row[4]);
+			printf("Price: %s\n", row[5]);
+			printf("Quantity: %s\n", row[6]);
+
+		}
+		std::cout << std::endl;
+
+	}
+	else { std::cout << "Query failed: " << mysql_error(g_conn) << std::endl; }
 
 }

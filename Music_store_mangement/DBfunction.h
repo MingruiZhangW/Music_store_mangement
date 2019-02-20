@@ -24,5 +24,6 @@ void FindMusic();
 void EditItem();
 void RemoveItem();
 void CreateOrder();
+void SoldItems();
 
 #endif // !DBFUNCTION_H
