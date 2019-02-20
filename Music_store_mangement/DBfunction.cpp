@@ -378,7 +378,7 @@ void EditItem() {
 	if (musid_to_edit == 5 || musid_to_edit == 6) { 
 
 		getinput_num(update_item_int); 
-		update_query += update_item_int;
+		update_query += std::to_string(update_item_int);
 
 	}
 	else {
