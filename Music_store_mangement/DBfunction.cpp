@@ -139,28 +139,15 @@ std::string Insert_addNewItemInDatabase_query(
 
 	//INSERT INTO `musicinfo_tb` (`m_category`, `m_type`, `m_name`, `m_artist`, `m_price`, `m_quantity`) VALUES
 	//('Popular ', 'Jazz', 'WU-TANG CLAN ¨C ¡®DON¡¯T STOP¡¯', 'WU-TANG CLAN', 10, 1)
+
+	//Used snprintf 
 	std::string query_re;
+	char buffer[300];
 	if (soldOrinfo) { query_re = "INSERT INTO solditem_tb (m_category, m_type, m_name, m_artist, m_price, m_quantity) VALUES (\""; }
 	else { query_re = "INSERT INTO musicinfo_tb (m_category, m_type, m_name, m_artist, m_price, m_quantity) VALUES (\""; }
-	query_re += Category;
-	query_re += "\"";
-	query_re += ",";
-	query_re += "\"";
-	query_re += Type;
-	query_re += "\"";
-	query_re += ",";
-	query_re += "\"";
-	query_re += Name;
-	query_re += "\"";
-	query_re += ",";
-	query_re += "\"";
-	query_re += Artist;
-	query_re += "\"";
-	query_re += ",";
-	query_re += std::to_string(Price);
-	query_re += ",";
-	query_re += std::to_string(Quantity);
-	query_re += ");";
+	snprintf(buffer,300, "%s\",\"%s\",\"%s\",\"%s\",%d,%d)", Category.c_str(), Type.c_str(), Name.c_str(), Artist.c_str(), Price, Quantity);
+	std::string inter(buffer);
+	query_re += inter;
 
 	return query_re;
 
